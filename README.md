@@ -1,3 +1,3 @@
 # wordnet-attributes
 
-    python3 wordnet-attributes/main.py
+    python wordnet-attributes/main.py
