@@ -26,7 +26,7 @@ def main(source_data_file, config):
     dest_filename = f"{now_str}-output-{source_data_file}"
 
     mutator = TermMutator(
-        tokenizer=BasicEnglishTextTokenizerNoAdjectives(model_path=config["Spacy"]["model_path"])
+        tokenizer=BasicEnglishTextTokenizer(model_path=config["Spacy"]["model_path"])
     )
 
     word2vec_similarity_calculator = Word2VecSimilarityCalculator(
@@ -49,12 +49,14 @@ def main(source_data_file, config):
                 term_mutator=mutator,
                 synset_choice_strategy=max_sim_choice_strategy,
             )
-            chosen_synset = semantics_generator.get_synset_for_attribute_semantics()
             click.echo(f"Concept: {concept_name}")
             click.echo(f"Attribute: {attribute_name}")
+            click.echo("Candidate synsets:")
+            chosen_synset = semantics_generator.get_synset_for_attribute_semantics()
             click.echo(f"Chosen synset: {chosen_synset}")
             click.echo()
-            row[-1].value = chosen_synset.name()
+            if chosen_synset:
+                row[-1].value = chosen_synset.name()
         click.echo()
     workbook.save(filename=dest_filename)
 

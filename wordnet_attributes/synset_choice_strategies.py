@@ -5,7 +5,7 @@ import itertools
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from statistics import mean
-from typing import List
+from typing import List, Tuple
 
 from synset_representation import SynsetRepresenation
 from similarities import SimilarityCalculator
@@ -20,9 +20,8 @@ class SynsetChoiceStrategy(ABC):
         self,
         tokenized_concept_name: List[str],
         synset_repr_list: List[SynsetRepresenation],
-    ) -> List[SynsetRepresenation]:
+    ) -> List[Tuple[SynsetRepresenation, float]]:
         pass
-
 
 
 class MaxSimilarityChoiceStrategy(SynsetChoiceStrategy):
@@ -30,7 +29,7 @@ class MaxSimilarityChoiceStrategy(SynsetChoiceStrategy):
         self,
         tokenized_concept_name: List[str],
         synset_repr_list: List[SynsetRepresenation],
-    ) -> List[SynsetRepresenation]:
+    ) -> List[Tuple[SynsetRepresenation, float]]:
 
         ranked_synsets_reprs = []
         for synset_repr in synset_repr_list:
@@ -42,15 +41,11 @@ class MaxSimilarityChoiceStrategy(SynsetChoiceStrategy):
                 except Exception as e:
                     partial_sims.append(0)
 
-            try:
-                max_sim = max(partial_sims)
-            except ValueError:
-                max_sim = 0
-
+            max_sim = max(partial_sims) if partial_sims else 0
             ranked_synsets_reprs.append((synset_repr, max_sim))
 
         return [
-            elem[0] for elem in sorted(
+            elem for elem in sorted(
                 ranked_synsets_reprs, key=lambda x: x[1], reverse=True)
         ]
 
@@ -60,7 +55,7 @@ class AvgSimilarityChoiceStrategy(SynsetChoiceStrategy):
         self,
         tokenized_concept_name: List[str],
         synset_repr_list: List[SynsetRepresenation],
-    ) -> List[SynsetRepresenation]:
+    ) -> List[Tuple[SynsetRepresenation, float]]:
 
         ranked_synsets_reprs = []
         for synset_repr in synset_repr_list:
@@ -72,10 +67,11 @@ class AvgSimilarityChoiceStrategy(SynsetChoiceStrategy):
                 except Exception as e:
                     partial_sims.append(0)
 
-            ranked_synsets_reprs.append((synset_repr, mean(partial_sims)))
+            mean_sim = mean(partial_sims) if partial_sims else 0
+            ranked_synsets_reprs.append((synset_repr, mean_sim))
 
         return [
-            elem[0] for elem in sorted(
+            elem for elem in sorted(
                 ranked_synsets_reprs, key=lambda x: x[1], reverse=True)
         ]
 
@@ -85,7 +81,7 @@ class AvgWithoutZerosSimilarityChoiceStrategy(SynsetChoiceStrategy):
         self,
         tokenized_concept_name: List[str],
         synset_repr_list: List[SynsetRepresenation],
-    ) -> List[SynsetRepresenation]:
+    ) -> List[Tuple[SynsetRepresenation, float]]:
 
         ranked_synsets_reprs = []
         for synset_repr in synset_repr_list:
@@ -102,6 +98,6 @@ class AvgWithoutZerosSimilarityChoiceStrategy(SynsetChoiceStrategy):
             ranked_synsets_reprs.append((synset_repr, mean_sim))
 
         return [
-            elem[0] for elem in sorted(
+            elem for elem in sorted(
                 ranked_synsets_reprs, key=lambda x: x[1], reverse=True)
         ]

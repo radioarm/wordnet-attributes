@@ -35,7 +35,7 @@ class ConceptAttributeSemanticsGenerator:
 
     @property
     def mutated_attribute_name(self) -> List[str]:
-        return self.term_mutator.mutate(self.concept_name)
+        return self.term_mutator.mutate(self.attribute_name)
 
     def get_candidate_attribute_synsets(self) -> List[SynsetRepresenation]:
         simple_attribute_names = []
@@ -64,5 +64,7 @@ class ConceptAttributeSemanticsGenerator:
                 self.mutated_concept_name,
                 self.get_candidate_attribute_synsets()
             )
-            return ordered_synsets[0].base_synset
+            for candid in ordered_synsets:
+                print(f'    {candid[0].base_synset.name()}, {candid[0].tokenized_definition}, {candid[1]}')
+            return ordered_synsets[0][0].base_synset
         return None
