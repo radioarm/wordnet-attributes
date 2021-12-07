@@ -57,7 +57,7 @@ def main(source_data_file, config):
             #     click.echo(f'    {candid[0].base_synset.name()}, {candid[0].tokenized_definition}, {candid[1]}')
             chosen_synset = semantics_generator.get_synset_for_attribute_semantics()
             # click.echo(f"Chosen synset: {chosen_synset}")
-            click.echo()
+            # click.echo()
             if chosen_synset:
                 row[2].value = chosen_synset.name()
                 row[3].value = ordered_synsets[0][0].base_synset.definition()
