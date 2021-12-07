@@ -63,7 +63,6 @@ class AvgSimilarityChoiceStrategy(SynsetChoiceStrategy):
                 )
             ]
 
-
             mean_sim = mean(partial_sims) if partial_sims else 0
             ranked_synsets_reprs.append((synset_repr, mean_sim))
 
@@ -87,7 +86,7 @@ class AvgWithoutZerosSimilarityChoiceStrategy(SynsetChoiceStrategy):
                 )
             ]
 
-            partial_sims = filter(lambda x: x!=0, partial_sims)
+            partial_sims = list(filter(lambda x: x!=0, partial_sims))
             mean_sim = mean(partial_sims) if partial_sims else 0
             ranked_synsets_reprs.append((synset_repr, mean_sim))
 
