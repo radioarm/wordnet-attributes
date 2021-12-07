@@ -33,21 +33,18 @@ class MaxSimilarityChoiceStrategy(SynsetChoiceStrategy):
 
         ranked_synsets_reprs = []
         for synset_repr in synset_repr_list:
-            partial_sims = []
-
-            for pair in itertools.product(tokenized_concept_name, synset_repr.tokenized_definition):
-                try:
-                    partial_sims.append(self.similarity_calculator.calculate(*pair))
-                except Exception as e:
-                    partial_sims.append(0)
+            partial_sims = [
+                self.similarity_calculator.calculate(*pair)
+                for pair in itertools.product(
+                    tokenized_concept_name, synset_repr.tokenized_definition
+                )
+            ]
 
             max_sim = max(partial_sims) if partial_sims else 0
             ranked_synsets_reprs.append((synset_repr, max_sim))
 
-        return [
-            elem for elem in sorted(
-                ranked_synsets_reprs, key=lambda x: x[1], reverse=True)
-        ]
+        return list(sorted(
+            ranked_synsets_reprs, key=lambda x: x[1], reverse=True))
 
 
 class AvgSimilarityChoiceStrategy(SynsetChoiceStrategy):
@@ -59,21 +56,19 @@ class AvgSimilarityChoiceStrategy(SynsetChoiceStrategy):
 
         ranked_synsets_reprs = []
         for synset_repr in synset_repr_list:
-            partial_sims = []
+            partial_sims = [
+                self.similarity_calculator.calculate(*pair)
+                for pair in itertools.product(
+                    tokenized_concept_name, synset_repr.tokenized_definition
+                )
+            ]
 
-            for pair in itertools.product(tokenized_concept_name, synset_repr.tokenized_definition):
-                try:
-                    partial_sims.append(self.similarity_calculator.calculate(*pair))
-                except Exception as e:
-                    partial_sims.append(0)
 
             mean_sim = mean(partial_sims) if partial_sims else 0
             ranked_synsets_reprs.append((synset_repr, mean_sim))
 
-        return [
-            elem for elem in sorted(
-                ranked_synsets_reprs, key=lambda x: x[1], reverse=True)
-        ]
+        return list(sorted(
+            ranked_synsets_reprs, key=lambda x: x[1], reverse=True))
 
 
 class AvgWithoutZerosSimilarityChoiceStrategy(SynsetChoiceStrategy):
@@ -85,19 +80,16 @@ class AvgWithoutZerosSimilarityChoiceStrategy(SynsetChoiceStrategy):
 
         ranked_synsets_reprs = []
         for synset_repr in synset_repr_list:
-            partial_sims = []
+            partial_sims = [
+                self.similarity_calculator.calculate(*pair)
+                for pair in itertools.product(
+                    tokenized_concept_name, synset_repr.tokenized_definition
+                )
+            ]
 
-            for pair in itertools.product(tokenized_concept_name, synset_repr.tokenized_definition):
-                try:
-                    partial_sims.append(self.similarity_calculator.calculate(*pair))
-                except Exception as e:
-                    continue
-
-            partial_sims = list(filter(lambda x: x!=0, partial_sims))
+            partial_sims = filter(lambda x: x!=0, partial_sims)
             mean_sim = mean(partial_sims) if partial_sims else 0
             ranked_synsets_reprs.append((synset_repr, mean_sim))
 
-        return [
-            elem for elem in sorted(
-                ranked_synsets_reprs, key=lambda x: x[1], reverse=True)
-        ]
+        return list(sorted(
+            ranked_synsets_reprs, key=lambda x: x[1], reverse=True))

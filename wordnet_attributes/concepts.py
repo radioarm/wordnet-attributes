@@ -5,7 +5,7 @@ import itertools
 from dataclasses import dataclass
 from nltk.corpus import wordnet as wn
 from nltk.corpus.reader.wordnet import Synset
-from typing import List
+from typing import List, Tuple, Union
 
 from synset_choice_strategies import SynsetChoiceStrategy
 from synset_representation import SynsetRepresenation
@@ -57,14 +57,15 @@ class ConceptAttributeSemanticsGenerator:
             for synset in output_synsets
         ]
 
-    def get_synset_for_attribute_semantics(self) -> Synset:
+    def get_ordered_synsets(self) -> List[Tuple[SynsetRepresenation, float]]:
         candidate_synsets = self.get_candidate_attribute_synsets()
         if candidate_synsets:
-            ordered_synsets = self.synset_choice_strategy.create_ordering(
+            return self.synset_choice_strategy.create_ordering(
                 self.mutated_concept_name,
                 self.get_candidate_attribute_synsets()
             )
-            for candid in ordered_synsets:
-                print(f'    {candid[0].base_synset.name()}, {candid[0].tokenized_definition}, {candid[1]}')
-            return ordered_synsets[0][0].base_synset
-        return None
+        return []
+
+    def get_synset_for_attribute_semantics(self) -> Union[Synset, None]:
+        ordered_synsets = self.get_ordered_synsets()
+        return ordered_synsets[0][0].base_synset if ordered_synsets else None

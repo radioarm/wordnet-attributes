@@ -33,7 +33,7 @@ def main(source_data_file, config):
         model_path=config["Word2Vec"]["model_path"], limit=config["Word2Vec"]["limit"]
     )
 
-    max_sim_choice_strategy = MaxSimilarityChoiceStrategy(
+    choice_strategy = MaxSimilarityChoiceStrategy(
         similarity_calculator=word2vec_similarity_calculator
     )
 
@@ -47,17 +47,23 @@ def main(source_data_file, config):
                 concept_name=concept_name,
                 attribute_name=attribute_name,
                 term_mutator=mutator,
-                synset_choice_strategy=max_sim_choice_strategy,
+                synset_choice_strategy=choice_strategy,
             )
-            click.echo(f"Concept: {concept_name}")
-            click.echo(f"Attribute: {attribute_name}")
-            click.echo("Candidate synsets:")
+            # click.echo(f"Concept: {concept_name}")
+            # click.echo(f"Attribute: {attribute_name}")
+            # click.echo("Candidate synsets:")
+            ordered_synsets = semantics_generator.get_ordered_synsets()
+            # for candid in ordered_synsets:
+            #     click.echo(f'    {candid[0].base_synset.name()}, {candid[0].tokenized_definition}, {candid[1]}')
             chosen_synset = semantics_generator.get_synset_for_attribute_semantics()
-            click.echo(f"Chosen synset: {chosen_synset}")
+            # click.echo(f"Chosen synset: {chosen_synset}")
             click.echo()
             if chosen_synset:
-                row[-1].value = chosen_synset.name()
-        click.echo()
+                row[2].value = chosen_synset.name()
+                row[3].value = ordered_synsets[0][0].base_synset.definition()
+                row[4].value = ','.join(ordered_synsets[0][0].tokenized_definition)
+                row[5].value = ordered_synsets[0][1]
+        # click.echo()
     workbook.save(filename=dest_filename)
 
 
