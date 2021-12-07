@@ -1,0 +1,9 @@
+[project]
+name = "WordNet Word2Vec attribute semantics generator"
+
+[Word2Vec]
+model_path = "data/GoogleNews-vectors-negative300.bin.gz"
+limit = 0
+
+[Spacy]
+model_path = "data/en_core_web_sm"
