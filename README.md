@@ -1,3 +1,3 @@
 # wordnet-attributes
 
-    python wordnet-attributes/main.py
+    python wordnet_attributes/main.py ontologie.xlsx
