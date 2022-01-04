@@ -19,4 +19,7 @@ def normalize_text_value(value) -> List[str]:
 
 
 def extract_attribute_name(text) -> str:
-    return text.split(':')[0].strip()
+    attr_name, attr_domain = [x.strip() for x in text.split(':')]
+    if attr_domain.lower() in ['datetime', 'date', 'time']:
+        attr_name += '_datetime'
+    return attr_name

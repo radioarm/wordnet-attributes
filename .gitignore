@@ -7,7 +7,7 @@ __pycache__/
 *.so
 
 #Ignore all xlsx files
-*.xlsx
+# *.xlsx
 
 # Distribution / packaging
 .Python
