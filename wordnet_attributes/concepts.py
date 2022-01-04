@@ -40,8 +40,12 @@ class ConceptAttributeSemanticsGenerator:
     def get_candidate_attribute_synsets(self) -> List[SynsetRepresenation]:
         simple_attribute_names = []
         compound_attribute_names = []
+        mutated_concept_name = self.mutated_concept_name
 
         for mut in self.mutated_attribute_name:
+            if mut in mutated_concept_name:
+                continue
+
             if '_' in mut:
                 compound_attribute_names.append(mut)
             else:

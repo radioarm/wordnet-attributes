@@ -43,8 +43,7 @@ class MaxSimilarityChoiceStrategy(SynsetChoiceStrategy):
             max_sim = max(partial_sims) if partial_sims else 0
             ranked_synsets_reprs.append((synset_repr, max_sim))
 
-        return list(sorted(
-            ranked_synsets_reprs, key=lambda x: x[1], reverse=True))
+        return list(sorted(ranked_synsets_reprs, key=lambda x: x[1], reverse=True))
 
 
 class AvgSimilarityChoiceStrategy(SynsetChoiceStrategy):
@@ -66,8 +65,7 @@ class AvgSimilarityChoiceStrategy(SynsetChoiceStrategy):
             mean_sim = mean(partial_sims) if partial_sims else 0
             ranked_synsets_reprs.append((synset_repr, mean_sim))
 
-        return list(sorted(
-            ranked_synsets_reprs, key=lambda x: x[1], reverse=True))
+        return list(sorted(ranked_synsets_reprs, key=lambda x: x[1], reverse=True))
 
 
 class AvgWithoutZerosSimilarityChoiceStrategy(SynsetChoiceStrategy):
@@ -86,9 +84,8 @@ class AvgWithoutZerosSimilarityChoiceStrategy(SynsetChoiceStrategy):
                 )
             ]
 
-            partial_sims = list(filter(lambda x: x!=0, partial_sims))
+            partial_sims = list(filter(lambda x: x != 0, partial_sims))
             mean_sim = mean(partial_sims) if partial_sims else 0
             ranked_synsets_reprs.append((synset_repr, mean_sim))
 
-        return list(sorted(
-            ranked_synsets_reprs, key=lambda x: x[1], reverse=True))
+        return list(sorted(ranked_synsets_reprs, key=lambda x: x[1], reverse=True))
